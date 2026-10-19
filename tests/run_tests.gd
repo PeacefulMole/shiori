@@ -17,11 +17,15 @@ func run() -> void:
 
 func _run_file(path: String) -> void:
 	var script: GDScript = load(path)
-	if script == null:
+	if script == null or not script.can_instantiate():
 		_failed += 1
-		print("FAIL ", path, " (load error)")
+		print("FAIL ", path, " (compile/load error)")
 		return
 	var instance = script.new()
+	if instance == null:
+		_failed += 1
+		print("FAIL ", path, " (instantiate error)")
+		return
 	for method in instance.get_method_list():
 		var method_name: String = method.name
 		if not method_name.begins_with("test_"):
