@@ -19,17 +19,17 @@ var fullscreen := false:
 		changed.emit()
 
 func _ready() -> void:
-	load()
+	load_settings()
 	apply()
 
-func save() -> void:
+func save_settings() -> void:
 	var file := FileAccess.open(PATH, FileAccess.WRITE)
 	if file == null:
 		push_error("cannot write settings")
 		return
 	file.store_string(JSON.stringify({"text_speed": text_speed, "music_volume": music_volume, "fullscreen": fullscreen}))
 
-func load() -> void:
+func load_settings() -> void:
 	if not FileAccess.file_exists(PATH):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))

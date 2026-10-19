@@ -1,5 +1,5 @@
 class_name ChoicePanel
-extends PanelContainer
+extends VBoxContainer
 
 signal option_selected(index: int)
 

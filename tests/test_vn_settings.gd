@@ -24,9 +24,9 @@ func test_save_load_roundtrip() -> void:
 	settings.text_speed = 20
 	settings.music_volume = 35
 	settings.fullscreen = true
-	settings.save()
+	settings.save_settings()
 	var restored := VNSettings.new()
-	restored.load()
+	restored.load_settings()
 	eq(restored.text_speed, 20, "text speed restored")
 	eq(restored.music_volume, 35, "volume restored")
 	eq(restored.fullscreen, true, "fullscreen restored")
