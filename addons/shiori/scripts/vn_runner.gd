@@ -51,10 +51,12 @@ func restore_state(state: Dictionary) -> void:
 	_stack.clear()
 	var commands := _root_commands
 	for entry in state.stack:
-		_stack.append({"commands": commands, "index": entry.i, "opt": entry.opt})
-		if entry.opt >= 0:
-			var choice: Dictionary = commands[entry.i - 1]
-			commands = choice.options[entry.opt].body
+		var index := int(entry.i)
+		var option := int(entry.opt)
+		_stack.append({"commands": commands, "index": index, "opt": option})
+		if option >= 0:
+			var choice: Dictionary = commands[index - 1]
+			commands = choice.options[option].body
 	_waiting_choice = false
 	_done = false
 	if not _stack.is_empty():
