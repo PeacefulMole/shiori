@@ -15,6 +15,23 @@ func start_text(text: String, chars_per_sec: int) -> void:
 	_typing = true
 	set_process(true)
 
+func get_state() -> Dictionary:
+	return {
+		"text": text,
+		"visible_characters": visible_characters,
+		"chars_per_sec": _chars_per_sec,
+		"elapsed": _elapsed,
+		"typing": _typing,
+	}
+
+func restore_state(state: Dictionary) -> void:
+	text = state.text
+	visible_characters = int(state.visible_characters)
+	_chars_per_sec = float(state.chars_per_sec)
+	_elapsed = float(state.elapsed)
+	_typing = bool(state.typing)
+	set_process(_typing)
+
 func is_typing() -> bool:
 	return _typing
 

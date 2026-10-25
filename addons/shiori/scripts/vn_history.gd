@@ -16,6 +16,14 @@ func add_narration(text: String) -> void:
 func get_entries() -> Array:
 	return _entries.duplicate()
 
+func get_state() -> Array:
+	return _entries.duplicate(true)
+
+func restore_state(entries: Array) -> void:
+	_entries = entries.duplicate(true)
+	while _entries.size() > MAX_ENTRIES:
+		_entries.pop_front()
+
 func clear() -> void:
 	_entries.clear()
 
