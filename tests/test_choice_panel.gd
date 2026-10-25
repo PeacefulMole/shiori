@@ -45,3 +45,14 @@ func test_show_twice_replaces_buttons() -> void:
 	panel.show_options(["В"])
 	eq(_buttons(panel).size(), 1, "old buttons replaced")
 	panel.free()
+
+func test_buttons_are_readable_and_styled() -> void:
+	var panel := ChoicePanel.new()
+	panel.set("option_texture", ImageTexture.new())
+	panel.show_options(["Длинный вариант, который должен переноситься на несколько строк"])
+	var button: Button = _buttons(panel)[0]
+	eq(button.custom_minimum_size, Vector2(720, 96), "choice button size")
+	eq(button.autowrap_mode, TextServer.AUTOWRAP_WORD_SMART, "long choice wraps")
+	eq(button.get_theme_font_size("font_size"), 28, "choice font size")
+	check(button.has_theme_stylebox_override("normal"), "choice uses the supplied artwork")
+	panel.free()
