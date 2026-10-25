@@ -15,10 +15,20 @@ class Recorder:
 		runner.choice_requested.connect(func(o): options = o)
 		runner.finished.connect(func(): finished = true)
 
+var _runners: Array[VNRunner] = []
+
 func _runner(commands: Array) -> VNRunner:
 	var runner := VNRunner.new()
+	_runners.append(runner)
 	runner.load_script(commands)
 	return runner
+
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_PREDELETE:
+		return
+	for runner in _runners:
+		if is_instance_valid(runner):
+			runner.free()
 
 func test_linear_script_signals() -> void:
 	var runner := _runner([

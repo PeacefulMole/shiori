@@ -14,7 +14,7 @@ func add_narration(text: String) -> void:
 	_append({"kind": "narration", "text": text})
 
 func get_entries() -> Array:
-	return _entries.duplicate()
+	return _entries.duplicate(true)
 
 func get_state() -> Array:
 	return _entries.duplicate(true)

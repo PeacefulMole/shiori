@@ -10,6 +10,7 @@ func test_defaults() -> void:
 	eq(settings.text_speed, 40, "text speed default")
 	eq(settings.music_volume, 70, "volume default")
 	eq(settings.fullscreen, false, "fullscreen default")
+	settings.free()
 
 func test_setter_emits_changed() -> void:
 	var settings := VNSettings.new()
@@ -18,6 +19,7 @@ func test_setter_emits_changed() -> void:
 	settings.text_speed = 80
 	eq(rec.changed_count, 1, "one emit per set")
 	eq(settings.text_speed, 80, "value set")
+	settings.free()
 
 func test_save_load_roundtrip() -> void:
 	var settings := VNSettings.new()
@@ -30,3 +32,15 @@ func test_save_load_roundtrip() -> void:
 	eq(restored.text_speed, 20, "text speed restored")
 	eq(restored.music_volume, 35, "volume restored")
 	eq(restored.fullscreen, true, "fullscreen restored")
+	restored.free()
+	settings.free()
+
+func test_values_are_clamped() -> void:
+	var settings := VNSettings.new()
+	settings.text_speed = -5
+	settings.music_volume = -5
+	eq(settings.text_speed, 1, "text speed has a positive minimum")
+	eq(settings.music_volume, 0, "volume minimum")
+	settings.music_volume = 150
+	eq(settings.music_volume, 100, "volume maximum")
+	settings.free()

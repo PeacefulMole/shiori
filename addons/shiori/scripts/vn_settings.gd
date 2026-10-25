@@ -7,11 +7,11 @@ const PATH := "user://settings.json"
 
 var text_speed := 40:
 	set(value):
-		text_speed = value
+		text_speed = max(value, 1)
 		changed.emit()
 var music_volume := 70:
 	set(value):
-		music_volume = value
+		music_volume = clamp(value, 0, 100)
 		changed.emit()
 var fullscreen := false:
 	set(value):

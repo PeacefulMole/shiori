@@ -13,6 +13,7 @@ func test_add_and_order() -> void:
 	eq(entries.size(), 2, "size")
 	eq(entries[0], {"kind": "say", "speaker": "Ульяна", "text": "Привет."}, "entry0")
 	eq(entries[1], {"kind": "narration", "text": "ремарка"}, "entry1")
+	history.free()
 
 func test_entry_added_signal() -> void:
 	var history := VNHistory.new()
@@ -21,6 +22,7 @@ func test_entry_added_signal() -> void:
 	history.add_say("К", "Привет.")
 	eq(rec.added.size(), 1, "signal count")
 	eq(rec.added[0].speaker, "К", "signal payload")
+	history.free()
 
 func test_cap_keeps_newest() -> void:
 	var history := VNHistory.new()
@@ -30,9 +32,19 @@ func test_cap_keeps_newest() -> void:
 	eq(entries.size(), VNHistory.MAX_ENTRIES, "capped size")
 	eq(entries[0].text, "line 2", "oldest dropped")
 	eq(entries.back().text, "line %d" % (VNHistory.MAX_ENTRIES + 1), "newest kept")
+	history.free()
 
 func test_clear() -> void:
 	var history := VNHistory.new()
 	history.add_say("К", "Привет.")
 	history.clear()
 	eq(history.get_entries().size(), 0, "empty after clear")
+	history.free()
+
+func test_returned_entries_are_independent() -> void:
+	var history := VNHistory.new()
+	history.add_say("К", "исходный текст")
+	var entries := history.get_entries()
+	entries[0].text = "изменение снаружи"
+	eq(history.get_entries()[0].text, "исходный текст", "history entries cannot be mutated outside")
+	history.free()

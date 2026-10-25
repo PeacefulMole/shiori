@@ -10,23 +10,27 @@ func test_current_track() -> void:
 	eq(audio.current_track(), "wind", "track set")
 	audio.play_music(_dummy(), "beast")
 	eq(audio.current_track(), "beast", "track switched")
+	audio.free()
 
 func test_same_key_is_noop() -> void:
 	var audio := VNAudio.new()
 	audio.play_music(_dummy(), "wind")
 	audio.play_music(_dummy(), "wind")
 	eq(audio.current_track(), "wind", "same key keeps track")
+	audio.free()
 
 func test_null_stream_rejected() -> void:
 	var audio := VNAudio.new()
 	audio.play_music(null, "wind")
 	eq(audio.current_track(), "", "null stream does not start a track")
+	audio.free()
 
 func test_stop_music() -> void:
 	var audio := VNAudio.new()
 	audio.play_music(_dummy(), "wind")
 	audio.stop_music()
 	eq(audio.current_track(), "", "cleared after stop")
+	audio.free()
 
 func test_rapid_switches_do_not_stop_new_track() -> void:
 	var tree := Engine.get_main_loop() as SceneTree
