@@ -45,7 +45,9 @@ func list_slots() -> Array:
 		return slots
 	for name in dir.get_files():
 		if name.begins_with("slot_") and name.ends_with(".json"):
-			slots.append(int(name.trim_prefix("slot_").trim_suffix(".json")))
+			var number := name.trim_prefix("slot_").trim_suffix(".json")
+			if number.is_valid_int() and str(int(number)) == number:
+				slots.append(int(number))
 	slots.sort()
 	return slots
 

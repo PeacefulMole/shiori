@@ -113,3 +113,22 @@ func test_restore_inside_choice() -> void:
 	eq(rec.events.filter(func(e): return e[0] == "said"), [["said", "К", "ответ Б"]], "picked second option")
 	runner.advance()
 	check(rec.finished, "finished")
+
+func test_restore_rejects_invalid_option() -> void:
+	var choice := {"type": "choice", "options": [{"text": "А", "body": []}]}
+	var runner := _runner([choice])
+	var before := runner.get_state()
+	check(not runner.call("restore_state", {"stack": [{"i": 1, "opt": 5}]}), "invalid option is rejected")
+	eq(runner.get_state(), before, "runner keeps its previous state")
+
+func test_restore_rejects_out_of_range_index() -> void:
+	var runner := _runner([{"type": "narrate", "text": "N"}])
+	var before := runner.get_state()
+	check(not runner.call("restore_state", {"stack": [{"i": 99, "opt": -1}]}), "invalid command index is rejected")
+	eq(runner.get_state(), before, "invalid index does not change state")
+
+func test_restore_rejects_missing_stack() -> void:
+	var runner := _runner([{"type": "narrate", "text": "N"}])
+	var before := runner.get_state()
+	check(not runner.call("restore_state", {}), "missing stack is rejected")
+	eq(runner.get_state(), before, "missing stack does not change state")

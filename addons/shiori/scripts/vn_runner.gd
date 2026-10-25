@@ -47,22 +47,47 @@ func get_state() -> Dictionary:
 		stack.append({"i": frame.index, "opt": frame.opt})
 	return {"stack": stack}
 
-func restore_state(state: Dictionary) -> void:
-	_stack.clear()
+func restore_state(state: Dictionary) -> bool:
+	if not state.get("stack") is Array:
+		return false
+	var entries: Array = state.stack
+	var restored: Array = []
 	var commands := _root_commands
-	for entry in state.stack:
+	for position in range(entries.size()):
+		var entry = entries[position]
+		if not entry is Dictionary:
+			return false
+		if not [TYPE_INT, TYPE_FLOAT].has(typeof(entry.get("i"))):
+			return false
+		if not [TYPE_INT, TYPE_FLOAT].has(typeof(entry.get("opt"))):
+			return false
 		var index := int(entry.i)
 		var option := int(entry.opt)
-		_stack.append({"commands": commands, "index": index, "opt": option})
+		if index < 0 or index > commands.size() or option < -1:
+			return false
+		if position < entries.size() - 1 and option < 0:
+			return false
+		restored.append({"commands": commands, "index": index, "opt": option})
 		if option >= 0:
-			var choice: Dictionary = commands[index - 1]
-			commands = choice.options[option].body
+			if index == 0:
+				return false
+			var command = commands[index - 1]
+			if not command is Dictionary or command.get("type", "") != "choice":
+				return false
+			if not command.get("options") is Array or option >= command.options.size():
+				return false
+			var selected = command.options[option]
+			if not selected is Dictionary or not selected.get("body") is Array:
+				return false
+			commands = selected.body
+	_stack = restored
 	_waiting_choice = false
 	_done = false
 	if not _stack.is_empty():
 		var top: Dictionary = _stack.back()
-		if top.index > 0 and top.commands[top.index - 1].type == "choice":
+		if top.index > 0 and top.opt < 0 and top.commands[top.index - 1].type == "choice":
 			_waiting_choice = true
+	return true
 
 func _step() -> void:
 	while not _stack.is_empty():

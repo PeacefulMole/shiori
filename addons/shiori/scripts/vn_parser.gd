@@ -21,11 +21,11 @@ static func _parse_block(lines: PackedStringArray, start: int, indent: int) -> D
 	var pos := start
 	while pos < lines.size():
 		var line: String = lines[pos]
-		var content := line.strip_edges(true, false)
+		var content := line.strip_edges(true, false).trim_suffix("\r")
 		if content.is_empty() or content.begins_with("#"):
 			pos += 1
 			continue
-		var cur_indent := line.length() - content.length()
+		var cur_indent := line.length() - line.strip_edges(true, false).length()
 		if cur_indent < indent:
 			break
 		if cur_indent > indent:
@@ -65,14 +65,14 @@ static func _parse_line(content: String, pos: int) -> Dictionary:
 	var colon := content.find(":")
 	if colon == -1:
 		return {"commands": [], "error": "line %d: cannot parse" % line_no}
-	var head := content.substr(0, colon)
+	var head := content.substr(0, colon).strip_edges()
 	var text := content.substr(colon + 1).strip_edges().replace("\\n", "\n")
 	var speaker := head
 	var commands: Array = []
 	if head.contains("|"):
 		var parts := head.split("|")
-		speaker = parts[0]
-		var pose: String = parts[1]
+		speaker = parts[0].strip_edges()
+		var pose := parts[1].strip_edges()
 		if speaker.is_empty() or pose.is_empty():
 			return {"commands": [], "error": "line %d: empty speaker or pose" % line_no}
 		commands.append({"type": "pose", "key": pose})
@@ -86,11 +86,11 @@ static func _parse_choice(lines: PackedStringArray, start: int, indent: int) -> 
 	var pos := start + 1
 	while pos < lines.size():
 		var line: String = lines[pos]
-		var content := line.strip_edges(true, false)
+		var content := line.strip_edges(true, false).trim_suffix("\r")
 		if content.is_empty() or content.begins_with("#"):
 			pos += 1
 			continue
-		var cur_indent := line.length() - content.length()
+		var cur_indent := line.length() - line.strip_edges(true, false).length()
 		if cur_indent < indent + 2:
 			break
 		if cur_indent != indent + 2 or not content.begins_with("- "):

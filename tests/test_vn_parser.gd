@@ -60,3 +60,18 @@ func test_comments_and_blank_lines_ignored() -> void:
 	var r := VNParser.parse("# комментарий\n\nКостя: Привет.\n\n# ещё\n")
 	eq(r.error, "", "error")
 	eq(r.commands.size(), 1, "count")
+
+func test_parse_crlf() -> void:
+	var r := VNParser.parse("@bg playground\r\n\r\n[Наррация]\r\nКостя: Привет\r\n")
+	eq(r.error, "", "CRLF parses cleanly")
+	eq(r.commands.size(), 3, "CRLF command count")
+	eq(r.commands[0].key, "playground", "directive has no carriage return")
+	eq(r.commands[1].text, "Наррация", "narration has no carriage return")
+	eq(r.commands[2].text, "Привет", "dialogue has no carriage return")
+
+func test_speaker_and_pose_are_trimmed() -> void:
+	var r := VNParser.parse("Ульяна|calm : Привет\nКостя : Да")
+	eq(r.error, "", "spaced heads parse cleanly")
+	eq(r.commands[0].key, "calm", "pose is trimmed")
+	eq(r.commands[1].speaker, "Ульяна", "posed speaker is trimmed")
+	eq(r.commands[2].speaker, "Костя", "plain speaker is trimmed")

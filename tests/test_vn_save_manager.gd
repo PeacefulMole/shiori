@@ -66,3 +66,14 @@ func test_delete_slot() -> void:
 	saves.delete_slot(SLOT)
 	eq(saves.load_slot(SLOT), {}, "deleted slot is empty")
 	_cleanup()
+
+func test_list_slots_ignores_noncanonical_names() -> void:
+	_cleanup()
+	var saves := VNSaveManager.new()
+	DirAccess.make_dir_recursive_absolute(VNSaveManager.SAVE_DIR)
+	var path := VNSaveManager.SAVE_DIR + "/slot_backup.json"
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string("{}")
+	file.close()
+	check(not saves.list_slots().has(0), "backup file does not become slot zero")
+	DirAccess.remove_absolute(path)
