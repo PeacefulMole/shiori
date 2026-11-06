@@ -55,4 +55,11 @@ func test_buttons_are_readable_and_styled() -> void:
 	eq(button.autowrap_mode, TextServer.AUTOWRAP_WORD_SMART, "long choice wraps")
 	eq(button.get_theme_font_size("font_size"), 28, "choice font size")
 	check(button.has_theme_stylebox_override("normal"), "choice uses the supplied artwork")
+	eq(button.get_child_count(), 1, "choice has one shade")
+	var shade: ColorRect = button.get_child(0) if button.get_child_count() == 1 else null
+	check(shade != null, "choice shade exists")
+	if shade != null:
+		eq(shade.color, Color(0, 0, 0, 0.35), "choice shade darkens the background")
+		check(shade.show_behind_parent, "choice shade stays behind the frame and text")
+		eq(shade.mouse_filter, Control.MOUSE_FILTER_IGNORE, "choice shade does not block clicks")
 	panel.free()

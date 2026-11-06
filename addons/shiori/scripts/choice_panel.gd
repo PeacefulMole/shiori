@@ -14,6 +14,12 @@ func show_options(options: Array) -> void:
 		button.custom_minimum_size = Vector2(720, 96)
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.add_theme_font_size_override("font_size", 28)
+		var shade := ColorRect.new()
+		shade.color = Color(0, 0, 0, 0.35)
+		shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		shade.show_behind_parent = true
+		button.add_child(shade)
+		shade.set_anchors_preset(Control.PRESET_FULL_RECT)
 		if option_texture != null:
 			var normal := StyleBoxTexture.new()
 			normal.texture = option_texture
