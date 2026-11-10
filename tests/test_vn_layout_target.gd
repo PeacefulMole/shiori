@@ -66,3 +66,28 @@ func test_texture_button_resize_updates_minimum_size() -> void:
 	eq(button.get_rect(), Rect2(100, 110, 40, 60), "minimum size does not override the requested rect")
 	button.free()
 	await tree.process_frame
+
+
+func test_centered_sprite_rect_includes_offset_and_parent_transform() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var parent := Node2D.new()
+	parent.position = Vector2(50, 40)
+	parent.scale = Vector2.ONE * 2
+	tree.root.add_child(parent)
+	var image := Image.create(64, 32, false, Image.FORMAT_RGBA8)
+	var sprite := Sprite2D.new()
+	sprite.texture = ImageTexture.create_from_image(image)
+	sprite.position = Vector2(100, 100)
+	sprite.scale = Vector2(2, 1.5)
+	sprite.offset = Vector2(4, 6)
+	parent.add_child(sprite)
+	var target := VNLayoutTarget.new("sprite", sprite)
+	eq(target.get_rect(), Rect2(138, 210, 256, 96), "centered offset and parent transform")
+	target.move_to(Vector2(20, 30))
+	eq(target.get_rect(), Rect2(20, 30, 256, 96), "centered sprite moved by visual rect")
+	eq(sprite.global_position, Vector2(132, 60), "node origin follows visual rect")
+	target.resize(1.5)
+	eq(target.get_rect(), Rect2(20, 30, 384, 144), "centered sprite resized by visual rect")
+	eq(sprite.scale, Vector2(3, 2.25), "local scale retained")
+	parent.free()
+	await tree.process_frame
