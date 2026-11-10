@@ -4,7 +4,7 @@ extends Control
 signal layout_saved(path: String)
 signal layout_reset(path: String)
 
-const VNLayoutTarget := preload("res://addons/shiori/scripts/vn_layout_target.gd")
+const VNLayoutTarget := preload("vn_layout_target.gd")
 
 var layout_path := "user://layout.json"
 var reference_texture: Texture2D:
