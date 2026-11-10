@@ -22,6 +22,8 @@ Work in progress.
 | `vn_settings.gd` | `VNSettings` | text speed / music volume / fullscreen, persisted |
 | `typewriter.gd` | `Typewriter` | `Label` that prints text character by character |
 | `choice_panel.gd` | `ChoicePanel` | vertical list of option buttons |
+| `vn_layout_target.gd` | `VNLayoutTarget` | editable Control/Sprite2D geometry |
+| `vn_layout_editor.gd` | `VNLayoutEditor` | visual layout editor with JSON persistence |
 
 ## Script format
 
@@ -57,6 +59,29 @@ runner.advance()
 
 `get_state()` / `restore_state()` snapshot progress (including mid-choice)
 as JSON-friendly dictionaries, which is how save slots work.
+
+## Layout editor
+
+`VNLayoutEditor` edits registered Controls and Sprite2Ds without knowing about
+the host scene. Supply optional reference artwork, icon textures, and a JSON
+path; custom geometry callbacks handle exceptional anchored elements.
+
+```gdscript
+const VNLayoutEditor := preload("res://addons/shiori/addons/shiori/scripts/vn_layout_editor.gd")
+
+var editor := VNLayoutEditor.new()
+editor.layout_path = "user://layout.json"
+editor.reference_texture = reference
+add_child(editor)
+editor.register_target("portrait", portrait)
+editor.register_target("dialogue", dialogue)
+editor.register_icon("marker", marker_texture)
+```
+
+The inspector supports dragging, proportional scaling, locks, additional
+icons, and a translucent reference. `save_layout()` and `load_layout()` use a
+versioned JSON schema. `reset_layout()` removes the configured file and emits
+`layout_reset`, leaving scene reload behavior to the host.
 
 ## Using Shiori in a project
 
