@@ -51,3 +51,18 @@ func test_zero_sized_target_ignores_resize() -> void:
 	eq(target.get_rect(), Rect2(0, 0, 0, 50), "zero-sized rect is unchanged")
 	check(target.get_rect().size.is_finite(), "zero-sized rect stays finite")
 	control.free()
+
+
+func test_texture_button_resize_updates_minimum_size() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var button := TextureButton.new()
+	button.custom_minimum_size = Vector2(32, 72)
+	button.size = Vector2(32, 72)
+	tree.root.add_child(button)
+	var target := VNLayoutTarget.new("button", button)
+	target.set_rect(Rect2(100, 110, 40, 60))
+	await tree.process_frame
+	eq(button.custom_minimum_size, Vector2(40, 60), "requested minimum size")
+	eq(button.get_rect(), Rect2(100, 110, 40, 60), "minimum size does not override the requested rect")
+	button.free()
+	await tree.process_frame

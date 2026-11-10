@@ -37,6 +37,8 @@ func set_rect(rect: Rect2) -> void:
 		return
 	if _node is Control:
 		_node.global_position = rect.position
+		if _node is TextureButton:
+			_node.custom_minimum_size = rect.size
 		_node.size = rect.size
 	elif _node is Sprite2D:
 		_node.position = rect.position
