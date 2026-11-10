@@ -12,21 +12,21 @@ func test_roundtrip() -> void:
 	_cleanup()
 	var saves := VNSaveManager.new()
 	var payload := {
-		"scene": "scene1",
+		"scene": "main_scene",
 		"stack": [{"i": 3, "opt": -1}],
-		"bg": "playground",
+		"bg": "forest",
 		"pose": "calm",
-		"music": "wind",
+		"music": "theme",
 	}
 	saves.save_slot(SLOT, payload)
 	var loaded := saves.load_slot(SLOT)
-	eq(loaded.scene, "scene1", "scene")
+	eq(loaded.scene, "main_scene", "scene")
 	eq(loaded.stack.size(), 1, "stack size")
 	eq(loaded.stack[0].i, 3, "stack index")
 	eq(loaded.stack[0].opt, -1, "stack option")
-	eq(loaded.bg, "playground", "bg")
+	eq(loaded.bg, "forest", "bg")
 	eq(loaded.pose, "calm", "pose")
-	eq(loaded.music, "wind", "music")
+	eq(loaded.music, "theme", "music")
 	_cleanup()
 	saves.free()
 
@@ -39,7 +39,7 @@ func test_load_missing_slot() -> void:
 func test_version_and_date_added() -> void:
 	_cleanup()
 	var saves := VNSaveManager.new()
-	saves.save_slot(SLOT, {"scene": "scene1"})
+	saves.save_slot(SLOT, {"scene": "main_scene"})
 	var loaded := saves.load_slot(SLOT)
 	eq(loaded.version, 1, "version")
 	check(loaded.date != "", "date set")
@@ -59,9 +59,9 @@ func test_list_slots_sorted() -> void:
 func test_get_slot_info() -> void:
 	_cleanup()
 	var saves := VNSaveManager.new()
-	saves.save_slot(SLOT, {"scene": "scene1"})
+	saves.save_slot(SLOT, {"scene": "main_scene"})
 	var info := saves.get_slot_info(SLOT)
-	eq(info.scene, "scene1", "info scene")
+	eq(info.scene, "main_scene", "info scene")
 	check(info.date != "", "info date")
 	_cleanup()
 	saves.free()

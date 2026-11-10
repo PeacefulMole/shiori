@@ -33,9 +33,9 @@ func _notification(what: int) -> void:
 func test_linear_script_signals() -> void:
 	var runner := _runner([
 		{"type": "narrate", "text": "N1"},
-		{"type": "say", "speaker": "Костя", "text": "S1"},
-		{"type": "bg", "key": "playground"},
-		{"type": "music", "key": "wind"},
+		{"type": "say", "speaker": "Bob", "text": "S1"},
+		{"type": "bg", "key": "forest"},
+		{"type": "music", "key": "theme"},
 		{"type": "pose", "key": "calm"},
 		{"type": "narrate", "text": "N2"},
 	])
@@ -46,11 +46,11 @@ func test_linear_script_signals() -> void:
 	eq(rec.events, [["narrated", "N1"]], "step1")
 	runner.advance()
 	eq(rec.events.size(), 2, "step2 size")
-	eq(rec.events[1], ["said", "Костя", "S1"], "step2")
+	eq(rec.events[1], ["said", "Bob", "S1"], "step2")
 	runner.advance()
 	eq(
 		rec.events,
-		[["narrated", "N1"], ["said", "Костя", "S1"], ["bg", "playground"], ["music", "wind"], ["pose", "calm"], ["narrated", "N2"]],
+		[["narrated", "N1"], ["said", "Bob", "S1"], ["bg", "forest"], ["music", "theme"], ["pose", "calm"], ["narrated", "N2"]],
 		"step3"
 	)
 	check(not rec.finished, "not finished yet")

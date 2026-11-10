@@ -7,11 +7,11 @@ class Recorder:
 
 func test_add_and_order() -> void:
 	var history := VNHistory.new()
-	history.add_say("Ульяна", "Привет.")
+	history.add_say("Alice", "Привет.")
 	history.add_narration("ремарка")
 	var entries := history.get_entries()
 	eq(entries.size(), 2, "size")
-	eq(entries[0], {"kind": "say", "speaker": "Ульяна", "text": "Привет."}, "entry0")
+	eq(entries[0], {"kind": "say", "speaker": "Alice", "text": "Привет."}, "entry0")
 	eq(entries[1], {"kind": "narration", "text": "ремарка"}, "entry1")
 	history.free()
 

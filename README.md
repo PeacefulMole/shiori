@@ -27,12 +27,12 @@ Work in progress.
 
 ```
 # comment
-@bg playground
-@music wind
+@bg forest
+@music theme
 @pose calm            # or @pose none to hide the character
 [narration text]
-Ulyana|calm: Hello.   # pose switch is optional
-Kostya: Hi.
+Alice|calm: Hello.    # pose switch is optional
+Bob: Hi.
 >choice
   - First option.     # options indented 2 spaces relative to >choice
       narration or dialogue inside the branch (indented 4 spaces)
